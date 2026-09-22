@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AnimatePresence, motion, type Variants } from 'framer-motion';
-import { Touchpad, X } from 'lucide-react';
+import { RotateCcw, Touchpad, X } from 'lucide-react';
 import { phoneApps } from '../data/phoneApps';
 import { iconMap } from './icons';
 
@@ -20,6 +20,7 @@ const iconItemVariants: Variants = {
 
 export function PhoneMockup() {
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
+  const [replayCount, setReplayCount] = useState(0);
 
   return (
     <motion.div
@@ -43,6 +44,7 @@ export function PhoneMockup() {
                   transition={{ duration: 0.2 }}
                 >
                   <iframe
+                    key={replayCount}
                     className="phone-video-iframe"
                     src={embedUrl(activeVideo)}
                     title="Project Demo Video"
@@ -50,6 +52,17 @@ export function PhoneMockup() {
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
                   />
+                  <button
+                    type="button"
+                    className="phone-video-replay-overlay"
+                    onClick={() => setReplayCount((count) => count + 1)}
+                    aria-label="Replay video"
+                    title="Tap to replay"
+                  >
+                    <span className="replay-hint">
+                      <RotateCcw style={{ width: 14, height: 14 }} /> Tap to Replay
+                    </span>
+                  </button>
                   <button
                     type="button"
                     className="phone-video-close"
