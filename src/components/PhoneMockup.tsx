@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { AnimatePresence, motion, type Variants } from 'framer-motion';
-import { RotateCcw, Touchpad, X } from 'lucide-react';
+import { Pause, Play, Touchpad, X } from 'lucide-react';
 import { phoneApps } from '../data/phoneApps';
 import { iconMap } from './icons';
 
-function embedUrl(youtubeId: string) {
-  return `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1`;
+function embedUrl(youtubeId: string, startSeconds: number) {
+  const start = Math.max(0, Math.floor(startSeconds));
+  return `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1${start ? `&start=${start}` : ''}`;
 }
 
 const iconGridVariants: Variants = {
@@ -20,7 +21,36 @@ const iconItemVariants: Variants = {
 
 export function PhoneMockup() {
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
-  const [replayCount, setReplayCount] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [iframeKey, setIframeKey] = useState(0);
+  const playStartedAtRef = useRef<number | null>(null);
+
+  function openApp(youtubeId: string) {
+    setActiveVideo(youtubeId);
+    setElapsedSeconds(0);
+    setIsPlaying(true);
+    playStartedAtRef.current = Date.now();
+    setIframeKey((key) => key + 1);
+  }
+
+  function togglePlayback() {
+    if (isPlaying) {
+      const startedAt = playStartedAtRef.current ?? Date.now();
+      setElapsedSeconds((prev) => prev + (Date.now() - startedAt) / 1000);
+      playStartedAtRef.current = null;
+      setIsPlaying(false);
+    } else {
+      playStartedAtRef.current = Date.now();
+      setIsPlaying(true);
+      setIframeKey((key) => key + 1);
+    }
+  }
+
+  function closeVideo() {
+    setActiveVideo(null);
+    playStartedAtRef.current = null;
+  }
 
   return (
     <motion.div
@@ -43,30 +73,51 @@ export function PhoneMockup() {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <iframe
-                    key={replayCount}
-                    className="phone-video-iframe"
-                    src={embedUrl(activeVideo)}
-                    title="Project Demo Video"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                  />
+                  {isPlaying ? (
+                    <iframe
+                      key={iframeKey}
+                      className="phone-video-iframe"
+                      src={embedUrl(activeVideo, elapsedSeconds)}
+                      title="Project Demo Video"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                  ) : (
+                    <div className="phone-video-paused">
+                      <img
+                        src={`https://img.youtube.com/vi/${activeVideo}/hqdefault.jpg`}
+                        alt="Video paused"
+                        className="phone-video-paused-thumb"
+                      />
+                      <div className="phone-video-play-icon">
+                        <Play style={{ fill: '#fff', width: 18, height: 18 }} />
+                      </div>
+                    </div>
+                  )}
                   <button
                     type="button"
-                    className="phone-video-replay-overlay"
-                    onClick={() => setReplayCount((count) => count + 1)}
-                    aria-label="Replay video"
-                    title="Tap to replay"
+                    className="phone-video-toggle-overlay"
+                    onClick={togglePlayback}
+                    aria-label={isPlaying ? 'Pause video' : 'Resume video'}
+                    title={isPlaying ? 'Tap to pause' : 'Tap to resume'}
                   >
-                    <span className="replay-hint">
-                      <RotateCcw style={{ width: 14, height: 14 }} /> Tap to Replay
+                    <span className="video-toggle-hint">
+                      {isPlaying ? (
+                        <>
+                          <Pause style={{ width: 14, height: 14 }} /> Tap to Pause
+                        </>
+                      ) : (
+                        <>
+                          <Play style={{ width: 14, height: 14 }} /> Tap to Resume
+                        </>
+                      )}
                     </span>
                   </button>
                   <button
                     type="button"
                     className="phone-video-close"
-                    onClick={() => setActiveVideo(null)}
+                    onClick={closeVideo}
                     title="Close video"
                   >
                     <X style={{ width: 14, height: 14 }} />
@@ -110,7 +161,7 @@ export function PhoneMockup() {
                   variants={iconItemVariants}
                   whileHover={{ scale: 1.08 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setActiveVideo(app.youtubeId)}
+                  onClick={() => openApp(app.youtubeId)}
                 >
                   <div className="app-box" style={{ background: app.gradient }}>
                     <Icon />
@@ -124,7 +175,7 @@ export function PhoneMockup() {
           <button
             type="button"
             className="phone-home-bar interactive"
-            onClick={() => setActiveVideo(null)}
+            onClick={closeVideo}
             title="Tap Home Bar to Reset Screen"
           />
         </div>
