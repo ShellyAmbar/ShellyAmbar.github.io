@@ -6,7 +6,10 @@ import { iconMap } from './icons';
 
 function embedUrl(youtubeId: string, startSeconds: number) {
   const start = Math.max(0, Math.floor(startSeconds));
-  return `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1${start ? `&start=${start}` : ''}`;
+  // mute=1 is required for autoplay to work on mobile browsers (Safari/Chrome block
+  // unmuted autoplay outright); playsinline=1 keeps it embedded instead of forcing
+  // fullscreen on iOS. Users can unmute via the player's own controls.
+  return `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=1&playsinline=1${start ? `&start=${start}` : ''}`;
 }
 
 const iconGridVariants: Variants = {

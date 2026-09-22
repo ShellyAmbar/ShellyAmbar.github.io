@@ -13,8 +13,11 @@ export function VideoModal({ youtubeId, onClose }: VideoModalProps) {
     document.body.style.overflow = isActive ? 'hidden' : 'auto';
   }, [isActive]);
 
+  // mute=1 is required for autoplay to work on mobile browsers (Safari/Chrome block
+  // unmuted autoplay outright); playsinline=1 keeps it embedded instead of forcing
+  // fullscreen on iOS. Users can unmute via the player's own controls.
   const embedUrl = youtubeId
-    ? `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1`
+    ? `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=1&playsinline=1`
     : '';
 
   return (
