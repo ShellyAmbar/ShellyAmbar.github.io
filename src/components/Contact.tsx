@@ -27,7 +27,7 @@ export function Contact() {
             </a>
 
             <a
-              href="https://github.com/ShellyAmbar"
+              href="https://www.npmjs.com/~shelly_amabr"
               target="_blank"
               rel="noopener"
               className="contact-card interactive"
