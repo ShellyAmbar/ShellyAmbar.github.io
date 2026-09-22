@@ -4,6 +4,6 @@ import { defineConfig } from 'vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  // Matches the GitHub Pages project path: shellyambar.github.io/portfolio/
-  base: '/portfolio/',
+  // Served from the root of the ShellyAmbar.github.io user-page domain.
+  base: '/',
 })
