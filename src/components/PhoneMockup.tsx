@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AnimatePresence, motion, type Variants } from 'framer-motion';
-import { Touchpad } from 'lucide-react';
+import { Touchpad, X } from 'lucide-react';
 import { phoneApps } from '../data/phoneApps';
 import { iconMap } from './icons';
 
@@ -34,12 +34,9 @@ export function PhoneMockup() {
           <div className={`interactive-screen-content${activeVideo ? ' has-video' : ''}`}>
             <AnimatePresence mode="wait">
               {activeVideo ? (
-                <motion.button
+                <motion.div
                   key={activeVideo}
-                  type="button"
                   className="phone-video-container"
-                  onClick={() => setActiveVideo(null)}
-                  title="Tap video to pause/close"
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
@@ -53,10 +50,15 @@ export function PhoneMockup() {
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
                   />
-                  <div className="phone-video-overlay-pause">
-                    <span className="pause-hint">Tap to Pause / Close</span>
-                  </div>
-                </motion.button>
+                  <button
+                    type="button"
+                    className="phone-video-close"
+                    onClick={() => setActiveVideo(null)}
+                    title="Close video"
+                  >
+                    <X style={{ width: 14, height: 14 }} />
+                  </button>
+                </motion.div>
               ) : (
                 <motion.div
                   key="placeholder"
