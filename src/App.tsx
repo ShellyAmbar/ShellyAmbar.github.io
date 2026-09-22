@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { MotionConfig } from 'framer-motion';
 import { About } from './components/About';
 import { Contact } from './components/Contact';
 import { CustomCursor } from './components/CustomCursor';
@@ -13,7 +14,7 @@ function App() {
   const [modalVideoId, setModalVideoId] = useState<string | null>(null);
 
   return (
-    <>
+    <MotionConfig reducedMotion="user">
       <CustomCursor />
       <ParticleCanvas />
 
@@ -28,7 +29,7 @@ function App() {
         <Projects onOpenVideo={setModalVideoId} />
         <Contact />
       </div>
-    </>
+    </MotionConfig>
   );
 }
 

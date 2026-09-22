@@ -1,6 +1,9 @@
 import { User } from 'lucide-react';
+import { roleTaglines } from '../data/taglines';
 import { skills, stats } from '../data/skills';
 import { PhoneMockup } from './PhoneMockup';
+import { Reveal } from './Reveal';
+import { Typewriter } from './Typewriter';
 
 export function About() {
   return (
@@ -10,7 +13,8 @@ export function About() {
       </h2>
 
       <div className="about-grid">
-        <div>
+        <Reveal>
+          <Typewriter phrases={roleTaglines} className="about-typewriter" />
           <p className="about-bio">
             Senior Frontend &amp; Mobile Developer specializing in high-performance cross-platform
             applications across iOS, Android, and Web systems. Experienced architecting fintech
@@ -38,7 +42,7 @@ export function About() {
               </span>
             ))}
           </div>
-        </div>
+        </Reveal>
 
         <div>
           <PhoneMockup />

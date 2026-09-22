@@ -431,6 +431,39 @@ body {
   }
 }
 
+.typewriter-line {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent-purple-light);
+  min-height: 1.4em;
+  margin-bottom: 0.9rem;
+}
+
+@media (min-width: 768px) {
+  .typewriter-line {
+    font-size: 1.2rem;
+  }
+}
+
+.typewriter-caret {
+  display: inline-block;
+  margin-left: 2px;
+  animation: caretBlink 1s steps(1) infinite;
+}
+
+@keyframes caretBlink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
+  }
+}
+
 .about-bio {
   color: var(--text-muted);
   font-size: 0.95rem;

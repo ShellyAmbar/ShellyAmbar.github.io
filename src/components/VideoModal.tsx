@@ -1,11 +1,6 @@
 import { useEffect } from 'react';
 import { X } from 'lucide-react';
 
-const siteOrigin =
-  window.location.origin && window.location.origin !== 'null'
-    ? window.location.origin
-    : 'https://www.youtube.com';
-
 interface VideoModalProps {
   youtubeId: string | null;
   onClose: () => void;
@@ -19,9 +14,7 @@ export function VideoModal({ youtubeId, onClose }: VideoModalProps) {
   }, [isActive]);
 
   const embedUrl = youtubeId
-    ? `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&enablejsapi=1&origin=${encodeURIComponent(
-        siteOrigin
-      )}`
+    ? `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1`
     : '';
 
   return (
