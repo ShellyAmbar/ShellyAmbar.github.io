@@ -738,10 +738,10 @@ body {
   opacity: 1;
 }
 
-.phone-video-close {
+.phone-video-close,
+.phone-video-retry {
   position: absolute;
   top: 6px;
-  right: 6px;
   width: 26px;
   height: 26px;
   background: rgba(0, 0, 0, 0.7);
@@ -755,11 +755,21 @@ body {
   z-index: 6;
 }
 
+.phone-video-close {
+  right: 6px;
+}
+
+.phone-video-retry {
+  left: 6px;
+}
+
 @media (min-width: 768px) {
-  .phone-video-close {
+  .phone-video-close,
+  .phone-video-retry {
     transition: background 0.2s ease, transform 0.2s ease;
   }
-  .phone-video-close:hover {
+  .phone-video-close:hover,
+  .phone-video-retry:hover {
     background: var(--accent-purple);
     transform: scale(1.1);
   }

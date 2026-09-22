@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { AnimatePresence, motion, type Variants } from 'framer-motion';
-import { Pause, Play, Touchpad, X } from 'lucide-react';
+import { Pause, Play, RotateCw, Touchpad, X } from 'lucide-react';
 import { phoneApps } from '../data/phoneApps';
 import { iconMap } from './icons';
 
@@ -53,6 +53,13 @@ export function PhoneMockup() {
   function closeVideo() {
     setActiveVideo(null);
     playStartedAtRef.current = null;
+  }
+
+  // Some mobile browsers occasionally stall a fresh embed (silently, with no
+  // event we can observe cross-origin) shortly after a page reload. Give
+  // users an unambiguous way to force a clean restart rather than guessing.
+  function retryVideo() {
+    if (activeVideo) openApp(activeVideo);
   }
 
   return (
@@ -117,6 +124,20 @@ export function PhoneMockup() {
                       )}
                     </span>
                   </button>
+                  {isPlaying && (
+                    <button
+                      type="button"
+                      className="phone-video-retry"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        retryVideo();
+                      }}
+                      title="Video stuck? Tap to restart"
+                      aria-label="Restart video"
+                    >
+                      <RotateCw style={{ width: 14, height: 14 }} />
+                    </button>
+                  )}
                   <button
                     type="button"
                     className="phone-video-close"
